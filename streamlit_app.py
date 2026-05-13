@@ -20,133 +20,17 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-/* ── CSS variables — light mode ── */
-:root {
-    --bg-page:        #eef1f7;
-    --bg-card:        #ffffff;
-    --bg-card-alt:    #f4f7fd;
-    --bg-input:       #ffffff;
-    --border:         #d0d7e8;
-    --border-subtle:  #e8ecf5;
-    --text-primary:   #0d1b38;
-    --text-secondary: #4a5878;
-    --text-muted:     #7b8caa;
-    --accent:         #1a4fd6;
-    --accent-hover:   #1340b0;
-    --accent-light:   #dde8ff;
-    --header-bg:      #0d1b38;
-    --header-text:    #ffffff;
-    --header-sub:     #7b9fd4;
-    --step-bg:        #1a4fd6;
-    --step-text:      #ffffff;
-    --step-label:     #0d1b38;
-    --metric-bg:      #ffffff;
-    --metric-num:     #0d1b38;
-    --metric-accent:  #1a4fd6;
-    --metric-lbl:     #4a5878;
-    --warn-bg:        #fff8e6;
-    --warn-border:    #f59e0b;
-    --warn-text:      #7a4500;
-    --info-bg:        #e8f0ff;
-    --info-border:    #1a4fd6;
-    --info-text:      #0d2d8a;
-    --how-bg:         #f4f7fd;
-    --how-border:     #d0d7e8;
-    --how-text:       #1e2d50;
-    --table-th-bg:    #e8edf8;
-    --table-th-text:  #1e2d50;
-    --table-border:   #d0d7e8;
-    --sidebar-bg:     #f4f7fd;
-    --sidebar-border: #d0d7e8;
-}
-
-/* ── CSS variables — dark mode ── */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-page:        #0d1117;
-        --bg-card:        #161c2d;
-        --bg-card-alt:    #1c2440;
-        --bg-input:       #1c2440;
-        --border:         #2e3d5e;
-        --border-subtle:  #243050;
-        --text-primary:   #e8edf8;
-        --text-secondary: #9aaecf;
-        --text-muted:     #5d7099;
-        --accent:         #4f85ff;
-        --accent-hover:   #6b99ff;
-        --accent-light:   #1a2d5a;
-        --header-bg:      #0a1628;
-        --header-text:    #ffffff;
-        --header-sub:     #6b99cc;
-        --step-bg:        #4f85ff;
-        --step-text:      #ffffff;
-        --step-label:     #c8d8f8;
-        --metric-bg:      #161c2d;
-        --metric-num:     #e8edf8;
-        --metric-accent:  #4f85ff;
-        --metric-lbl:     #7b9ac8;
-        --warn-bg:        #2a1f00;
-        --warn-border:    #f59e0b;
-        --warn-text:      #fcd47a;
-        --info-bg:        #0e1f45;
-        --info-border:    #4f85ff;
-        --info-text:      #93b8ff;
-        --how-bg:         #161c2d;
-        --how-border:     #2e3d5e;
-        --how-text:       #c8d8f8;
-        --table-th-bg:    #1c2440;
-        --table-th-text:  #c8d8f8;
-        --table-border:   #2e3d5e;
-        --sidebar-bg:     #111827;
-        --sidebar-border: #1f2d4a;
-    }
-}
-
-/* Streamlit dark mode override — Streamlit sets [data-theme="dark"] on <body> */
-[data-theme="dark"] {
-    --bg-page:        #0d1117;
-    --bg-card:        #161c2d;
-    --bg-card-alt:    #1c2440;
-    --bg-input:       #1c2440;
-    --border:         #2e3d5e;
-    --border-subtle:  #243050;
-    --text-primary:   #e8edf8;
-    --text-secondary: #9aaecf;
-    --text-muted:     #5d7099;
-    --accent:         #4f85ff;
-    --accent-hover:   #6b99ff;
-    --accent-light:   #1a2d5a;
-    --header-bg:      #0a1628;
-    --header-text:    #ffffff;
-    --header-sub:     #6b99cc;
-    --step-bg:        #4f85ff;
-    --step-text:      #ffffff;
-    --step-label:     #c8d8f8;
-    --metric-bg:      #161c2d;
-    --metric-num:     #e8edf8;
-    --metric-accent:  #4f85ff;
-    --metric-lbl:     #7b9ac8;
-    --warn-bg:        #2a1f00;
-    --warn-border:    #f59e0b;
-    --warn-text:      #fcd47a;
-    --info-bg:        #0e1f45;
-    --info-border:    #4f85ff;
-    --info-text:      #93b8ff;
-    --how-bg:         #161c2d;
-    --how-border:     #2e3d5e;
-    --how-text:       #c8d8f8;
-    --table-th-bg:    #1c2440;
-    --table-th-text:  #c8d8f8;
-    --table-border:   #2e3d5e;
-    --sidebar-bg:     #111827;
-    --sidebar-border: #1f2d4a;
-}
-
 html, body, [class*="css"] {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-.stApp { background: var(--bg-page) !important; }
+/* ════════════════════════════════════════════
+   LIGHT MODE  — white bg, black/navy text
+   ════════════════════════════════════════════ */
+
+/* Page background — light gray so white cards pop */
+.stApp { background: #f2f4f8 !important; }
+
 .block-container {
     padding-top: 1.8rem;
     padding-bottom: 3rem;
@@ -158,41 +42,40 @@ html, body, [class*="css"] {
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    background: var(--header-bg);
+    background: #0d1b38;
     border-radius: 12px;
     padding: 1.8rem 2.2rem;
     margin-bottom: 1.8rem;
-    border: 1px solid rgba(255,255,255,0.07);
 }
 .app-header-text h1 {
     margin: 0;
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--header-text);
+    color: #ffffff !important;
     letter-spacing: -0.4px;
 }
 .app-header-text p {
     margin: 0.3rem 0 0;
     font-size: 0.9rem;
-    color: var(--header-sub);
+    color: #93b4df !important;
 }
 
 /* ── Section cards ── */
 .section-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1.5px solid #c8d0e0;
     border-radius: 12px;
     padding: 1.6rem 1.9rem 2rem;
     margin-bottom: 1.4rem;
 }
 
-/* ── Step label — bigger, bolder, dark-blue ── */
+/* ── Step label ── */
 .section-label {
     font-size: 1.05rem;
     font-weight: 700;
     letter-spacing: 0;
     text-transform: none;
-    color: var(--step-label);
+    color: #0d1b38 !important;
     margin-bottom: 1.1rem;
     display: flex;
     align-items: center;
@@ -205,27 +88,29 @@ html, body, [class*="css"] {
     align-items: center;
     justify-content: center;
     width: 30px; height: 30px;
-    background: var(--step-bg);
-    color: var(--step-text);
+    background: #1a4fd6;
+    color: #ffffff !important;
     border-radius: 50%;
     font-size: 0.9rem;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(26,79,214,0.3);
+    box-shadow: 0 2px 8px rgba(26,79,214,0.35);
 }
 
 /* ── How-to instruction box ── */
 .how-to {
-    background: var(--how-bg);
-    border: 1px solid var(--how-border);
+    background: #f0f4ff;
+    border: 1.5px solid #b8c8f0;
     border-radius: 10px;
     padding: 1.1rem 1.4rem;
     font-size: 0.88rem;
-    color: var(--how-text);
+    color: #0d1b38 !important;
     line-height: 1.7;
     margin-bottom: 0.2rem;
 }
-.how-to strong { color: var(--accent); }
+.how-to strong { color: #1a4fd6 !important; }
+
+/* ── Shorthand table inside how-to ── */
 .shorthand-table {
     width: 100%;
     border-collapse: collapse;
@@ -233,19 +118,20 @@ html, body, [class*="css"] {
     margin-top: 0.6rem;
 }
 .shorthand-table th {
-    background: var(--table-th-bg);
-    color: var(--table-th-text);
+    background: #dce6ff;
+    color: #0d1b38 !important;
     font-weight: 700;
     padding: 0.5rem 0.9rem;
     text-align: left;
-    border-bottom: 2px solid var(--table-border);
+    border-bottom: 2px solid #b8c8f0;
 }
 .shorthand-table td {
     padding: 0.45rem 0.9rem;
-    border-bottom: 1px solid var(--border-subtle);
-    color: var(--how-text);
+    border-bottom: 1px solid #dde3f0;
+    color: #1e2d50 !important;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.82rem;
+    background: #ffffff;
 }
 .shorthand-table tr:last-child td { border-bottom: none; }
 
@@ -257,24 +143,24 @@ html, body, [class*="css"] {
     margin-bottom: 1.4rem;
 }
 .metric-card {
-    background: var(--metric-bg);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1.5px solid #c8d0e0;
+    border-top: 3px solid #1a4fd6;
     border-radius: 12px;
     padding: 1.2rem 1.4rem 1.3rem;
     text-align: center;
-    border-top: 3px solid var(--accent);
 }
 .metric-num {
     font-size: 2.1rem;
     font-weight: 700;
-    color: var(--metric-num);
+    color: #0d1b38 !important;
     font-family: 'IBM Plex Mono', monospace;
     line-height: 1.1;
 }
-.metric-num.accent { color: var(--metric-accent); }
+.metric-num.accent { color: #1a4fd6 !important; }
 .metric-lbl {
     font-size: 0.8rem;
-    color: var(--metric-lbl);
+    color: #4a5878 !important;
     margin-top: 0.35rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -283,18 +169,16 @@ html, body, [class*="css"] {
 
 /* ── Buttons ── */
 .stButton > button {
-    background: var(--accent) !important;
-    color: #fff !important;
+    background: #1a4fd6 !important;
+    color: #ffffff !important;
     border: none !important;
     border-radius: 8px !important;
     font-weight: 700 !important;
     font-size: 0.97rem !important;
     padding: 0.65rem 2rem !important;
-    letter-spacing: 0.01em !important;
-    box-shadow: 0 2px 10px rgba(26,79,214,0.25) !important;
-    transition: background 0.15s !important;
+    box-shadow: 0 2px 10px rgba(26,79,214,0.3) !important;
 }
-.stButton > button:hover { background: var(--accent-hover) !important; }
+.stButton > button:hover { background: #1340b0 !important; }
 .stDownloadButton > button {
     border-radius: 8px !important;
     font-weight: 600 !important;
@@ -304,57 +188,234 @@ html, body, [class*="css"] {
 /* ── Textareas ── */
 .stTextArea label {
     font-weight: 600 !important;
-    color: var(--text-primary) !important;
+    color: #0d1b38 !important;
     font-size: 0.92rem !important;
 }
 .stTextArea textarea {
     font-family: 'IBM Plex Mono', monospace !important;
     font-size: 0.85rem !important;
     border-radius: 8px !important;
-    background: var(--bg-input) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border) !important;
+    background: #ffffff !important;
+    color: #0d1b38 !important;
+    border: 1.5px solid #b8c2d8 !important;
 }
 
-/* ── Alerts ── */
+/* ── Alert boxes ── */
 .alert-warn {
-    background: var(--warn-bg);
-    border-left: 4px solid var(--warn-border);
+    background: #fff8e6;
+    border-left: 4px solid #f59e0b;
     border-radius: 0 8px 8px 0;
     padding: 0.85rem 1.2rem;
     font-size: 0.9rem;
-    color: var(--warn-text);
+    color: #6b3a00 !important;
     margin-bottom: 1rem;
     font-weight: 500;
 }
 .alert-info {
-    background: var(--info-bg);
-    border-left: 4px solid var(--info-border);
+    background: #e6eeff;
+    border-left: 4px solid #1a4fd6;
     border-radius: 0 8px 8px 0;
     padding: 0.85rem 1.2rem;
     font-size: 0.9rem;
-    color: var(--info-text);
+    color: #0d2d8a !important;
     margin-bottom: 1rem;
     font-weight: 500;
 }
 
-/* ── Sidebar ── */
-section[data-testid="stSidebar"] {
-    background: var(--sidebar-bg) !important;
-    border-right: 1px solid var(--sidebar-border) !important;
+/* ── Streamlit native expander — force visible text in light mode ── */
+[data-testid="stExpander"] {
+    background: #ffffff !important;
+    border: 1.5px solid #c8d0e0 !important;
+    border-radius: 10px !important;
 }
-section[data-testid="stSidebar"] * {
-    color: var(--text-primary) !important;
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary p,
+[data-testid="stExpander"] summary span {
+    color: #0d1b38 !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+}
+[data-testid="stExpander"] > div {
+    background: #ffffff !important;
+    color: #0d1b38 !important;
 }
 
-/* ── General text readability ── */
-p, li, span, label, div {
-    color: var(--text-primary);
+/* ── Streamlit sidebar — light mode ── */
+section[data-testid="stSidebar"] {
+    background: #ffffff !important;
+    border-right: 1.5px solid #c8d0e0 !important;
 }
-small { color: var(--text-secondary) !important; }
-.stCaption, [data-testid="stCaptionContainer"] {
-    color: var(--text-muted) !important;
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] div,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] .stCaption {
+    color: #0d1b38 !important;
 }
+section[data-testid="stSidebar"] input,
+section[data-testid="stSidebar"] textarea {
+    background: #f2f4f8 !important;
+    color: #0d1b38 !important;
+    border: 1.5px solid #b8c2d8 !important;
+    border-radius: 7px !important;
+}
+section[data-testid="stSidebar"] .stMarkdown p {
+    color: #4a5878 !important;
+}
+
+/* ── General light-mode text ── */
+.stMarkdown p, .stMarkdown li, .stMarkdown span {
+    color: #1e2d50 !important;
+}
+.stCaption, [data-testid="stCaptionContainer"] p {
+    color: #5a6a8a !important;
+}
+
+/* ════════════════════════════════════════════
+   DARK MODE overrides
+   ════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+    .stApp { background: #0d1117 !important; }
+
+    .section-card {
+        background: #161c2d !important;
+        border-color: #2e3d5e !important;
+    }
+    .section-label { color: #c8d8f8 !important; }
+
+    .how-to {
+        background: #1a2340 !important;
+        border-color: #2e3d5e !important;
+        color: #c8d8f8 !important;
+    }
+    .how-to strong { color: #7aabff !important; }
+    .shorthand-table th {
+        background: #1c2a4a !important;
+        color: #c8d8f8 !important;
+        border-bottom-color: #2e3d5e !important;
+    }
+    .shorthand-table td {
+        background: #161c2d !important;
+        color: #a0b8e0 !important;
+        border-bottom-color: #243050 !important;
+    }
+
+    .metric-card {
+        background: #161c2d !important;
+        border-color: #2e3d5e !important;
+        border-top-color: #4f85ff !important;
+    }
+    .metric-num { color: #e8edf8 !important; }
+    .metric-num.accent { color: #4f85ff !important; }
+    .metric-lbl { color: #7b9ac8 !important; }
+
+    .alert-warn {
+        background: #2a1f00 !important;
+        color: #fcd47a !important;
+    }
+    .alert-info {
+        background: #0e1f45 !important;
+        color: #93b8ff !important;
+    }
+
+    .step-badge {
+        background: #4f85ff !important;
+        box-shadow: 0 2px 8px rgba(79,133,255,0.4) !important;
+    }
+    .stButton > button {
+        background: #4f85ff !important;
+    }
+    .stButton > button:hover { background: #6b99ff !important; }
+
+    .stTextArea textarea {
+        background: #1c2440 !important;
+        color: #e8edf8 !important;
+        border-color: #2e3d5e !important;
+    }
+    .stTextArea label { color: #c8d8f8 !important; }
+
+    [data-testid="stExpander"] {
+        background: #161c2d !important;
+        border-color: #2e3d5e !important;
+    }
+    [data-testid="stExpander"] summary,
+    [data-testid="stExpander"] summary p,
+    [data-testid="stExpander"] summary span {
+        color: #c8d8f8 !important;
+    }
+    [data-testid="stExpander"] > div {
+        background: #161c2d !important;
+        color: #c8d8f8 !important;
+    }
+
+    section[data-testid="stSidebar"] {
+        background: #111827 !important;
+        border-right-color: #1f2d4a !important;
+    }
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] div,
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] .stCaption {
+        color: #c8d8f8 !important;
+    }
+    section[data-testid="stSidebar"] input,
+    section[data-testid="stSidebar"] textarea {
+        background: #1c2440 !important;
+        color: #e8edf8 !important;
+        border-color: #2e3d5e !important;
+    }
+
+    .stMarkdown p, .stMarkdown li, .stMarkdown span {
+        color: #c8d8f8 !important;
+    }
+    .stCaption, [data-testid="stCaptionContainer"] p {
+        color: #7b9ac8 !important;
+    }
+}
+
+/* Streamlit [data-theme="dark"] attribute — same dark overrides */
+[data-theme="dark"] .stApp { background: #0d1117 !important; }
+[data-theme="dark"] .section-card { background: #161c2d !important; border-color: #2e3d5e !important; }
+[data-theme="dark"] .section-label { color: #c8d8f8 !important; }
+[data-theme="dark"] .how-to { background: #1a2340 !important; border-color: #2e3d5e !important; color: #c8d8f8 !important; }
+[data-theme="dark"] .how-to strong { color: #7aabff !important; }
+[data-theme="dark"] .shorthand-table th { background: #1c2a4a !important; color: #c8d8f8 !important; border-bottom-color: #2e3d5e !important; }
+[data-theme="dark"] .shorthand-table td { background: #161c2d !important; color: #a0b8e0 !important; }
+[data-theme="dark"] .metric-card { background: #161c2d !important; border-color: #2e3d5e !important; border-top-color: #4f85ff !important; }
+[data-theme="dark"] .metric-num { color: #e8edf8 !important; }
+[data-theme="dark"] .metric-num.accent { color: #4f85ff !important; }
+[data-theme="dark"] .metric-lbl { color: #7b9ac8 !important; }
+[data-theme="dark"] .alert-warn { background: #2a1f00 !important; color: #fcd47a !important; }
+[data-theme="dark"] .alert-info { background: #0e1f45 !important; color: #93b8ff !important; }
+[data-theme="dark"] .step-badge { background: #4f85ff !important; }
+[data-theme="dark"] .stButton > button { background: #4f85ff !important; }
+[data-theme="dark"] .stButton > button:hover { background: #6b99ff !important; }
+[data-theme="dark"] .stTextArea textarea { background: #1c2440 !important; color: #e8edf8 !important; border-color: #2e3d5e !important; }
+[data-theme="dark"] .stTextArea label { color: #c8d8f8 !important; }
+[data-theme="dark"] [data-testid="stExpander"] { background: #161c2d !important; border-color: #2e3d5e !important; }
+[data-theme="dark"] [data-testid="stExpander"] summary,
+[data-theme="dark"] [data-testid="stExpander"] summary p,
+[data-theme="dark"] [data-testid="stExpander"] summary span { color: #c8d8f8 !important; }
+[data-theme="dark"] [data-testid="stExpander"] > div { background: #161c2d !important; color: #c8d8f8 !important; }
+[data-theme="dark"] section[data-testid="stSidebar"] { background: #111827 !important; border-right-color: #1f2d4a !important; }
+[data-theme="dark"] section[data-testid="stSidebar"] p,
+[data-theme="dark"] section[data-testid="stSidebar"] span,
+[data-theme="dark"] section[data-testid="stSidebar"] label,
+[data-theme="dark"] section[data-testid="stSidebar"] div { color: #c8d8f8 !important; }
+[data-theme="dark"] section[data-testid="stSidebar"] input,
+[data-theme="dark"] section[data-testid="stSidebar"] textarea { background: #1c2440 !important; color: #e8edf8 !important; border-color: #2e3d5e !important; }
+[data-theme="dark"] .stMarkdown p,
+[data-theme="dark"] .stMarkdown li,
+[data-theme="dark"] .stMarkdown span { color: #c8d8f8 !important; }
+[data-theme="dark"] .stCaption,
+[data-theme="dark"] [data-testid="stCaptionContainer"] p { color: #7b9ac8 !important; }
 </style>
 """, unsafe_allow_html=True)
 
