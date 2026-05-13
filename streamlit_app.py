@@ -18,231 +18,342 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ── CSS variables — light mode ── */
+:root {
+    --bg-page:        #eef1f7;
+    --bg-card:        #ffffff;
+    --bg-card-alt:    #f4f7fd;
+    --bg-input:       #ffffff;
+    --border:         #d0d7e8;
+    --border-subtle:  #e8ecf5;
+    --text-primary:   #0d1b38;
+    --text-secondary: #4a5878;
+    --text-muted:     #7b8caa;
+    --accent:         #1a4fd6;
+    --accent-hover:   #1340b0;
+    --accent-light:   #dde8ff;
+    --header-bg:      #0d1b38;
+    --header-text:    #ffffff;
+    --header-sub:     #7b9fd4;
+    --step-bg:        #1a4fd6;
+    --step-text:      #ffffff;
+    --step-label:     #0d1b38;
+    --metric-bg:      #ffffff;
+    --metric-num:     #0d1b38;
+    --metric-accent:  #1a4fd6;
+    --metric-lbl:     #4a5878;
+    --warn-bg:        #fff8e6;
+    --warn-border:    #f59e0b;
+    --warn-text:      #7a4500;
+    --info-bg:        #e8f0ff;
+    --info-border:    #1a4fd6;
+    --info-text:      #0d2d8a;
+    --how-bg:         #f4f7fd;
+    --how-border:     #d0d7e8;
+    --how-text:       #1e2d50;
+    --table-th-bg:    #e8edf8;
+    --table-th-text:  #1e2d50;
+    --table-border:   #d0d7e8;
+    --sidebar-bg:     #f4f7fd;
+    --sidebar-border: #d0d7e8;
+}
+
+/* ── CSS variables — dark mode ── */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-page:        #0d1117;
+        --bg-card:        #161c2d;
+        --bg-card-alt:    #1c2440;
+        --bg-input:       #1c2440;
+        --border:         #2e3d5e;
+        --border-subtle:  #243050;
+        --text-primary:   #e8edf8;
+        --text-secondary: #9aaecf;
+        --text-muted:     #5d7099;
+        --accent:         #4f85ff;
+        --accent-hover:   #6b99ff;
+        --accent-light:   #1a2d5a;
+        --header-bg:      #0a1628;
+        --header-text:    #ffffff;
+        --header-sub:     #6b99cc;
+        --step-bg:        #4f85ff;
+        --step-text:      #ffffff;
+        --step-label:     #c8d8f8;
+        --metric-bg:      #161c2d;
+        --metric-num:     #e8edf8;
+        --metric-accent:  #4f85ff;
+        --metric-lbl:     #7b9ac8;
+        --warn-bg:        #2a1f00;
+        --warn-border:    #f59e0b;
+        --warn-text:      #fcd47a;
+        --info-bg:        #0e1f45;
+        --info-border:    #4f85ff;
+        --info-text:      #93b8ff;
+        --how-bg:         #161c2d;
+        --how-border:     #2e3d5e;
+        --how-text:       #c8d8f8;
+        --table-th-bg:    #1c2440;
+        --table-th-text:  #c8d8f8;
+        --table-border:   #2e3d5e;
+        --sidebar-bg:     #111827;
+        --sidebar-border: #1f2d4a;
+    }
+}
+
+/* Streamlit dark mode override — Streamlit sets [data-theme="dark"] on <body> */
+[data-theme="dark"] {
+    --bg-page:        #0d1117;
+    --bg-card:        #161c2d;
+    --bg-card-alt:    #1c2440;
+    --bg-input:       #1c2440;
+    --border:         #2e3d5e;
+    --border-subtle:  #243050;
+    --text-primary:   #e8edf8;
+    --text-secondary: #9aaecf;
+    --text-muted:     #5d7099;
+    --accent:         #4f85ff;
+    --accent-hover:   #6b99ff;
+    --accent-light:   #1a2d5a;
+    --header-bg:      #0a1628;
+    --header-text:    #ffffff;
+    --header-sub:     #6b99cc;
+    --step-bg:        #4f85ff;
+    --step-text:      #ffffff;
+    --step-label:     #c8d8f8;
+    --metric-bg:      #161c2d;
+    --metric-num:     #e8edf8;
+    --metric-accent:  #4f85ff;
+    --metric-lbl:     #7b9ac8;
+    --warn-bg:        #2a1f00;
+    --warn-border:    #f59e0b;
+    --warn-text:      #fcd47a;
+    --info-bg:        #0e1f45;
+    --info-border:    #4f85ff;
+    --info-text:      #93b8ff;
+    --how-bg:         #161c2d;
+    --how-border:     #2e3d5e;
+    --how-text:       #c8d8f8;
+    --table-th-bg:    #1c2440;
+    --table-th-text:  #c8d8f8;
+    --table-border:   #2e3d5e;
+    --sidebar-bg:     #111827;
+    --sidebar-border: #1f2d4a;
+}
 
 html, body, [class*="css"] {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-.stApp { background: #f0f2f5; }
+.stApp { background: var(--bg-page) !important; }
 .block-container {
     padding-top: 1.8rem;
     padding-bottom: 3rem;
     max-width: 1060px;
 }
 
-/* Header */
+/* ── Header ── */
 .app-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    background: #0f1f3d;
-    border-radius: 10px;
-    padding: 1.6rem 2rem;
-    margin-bottom: 1.6rem;
+    gap: 1.2rem;
+    background: var(--header-bg);
+    border-radius: 12px;
+    padding: 1.8rem 2.2rem;
+    margin-bottom: 1.8rem;
+    border: 1px solid rgba(255,255,255,0.07);
 }
 .app-header-text h1 {
     margin: 0;
-    font-size: 1.55rem;
-    font-weight: 600;
-    color: #ffffff;
-    letter-spacing: -0.3px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--header-text);
+    letter-spacing: -0.4px;
 }
 .app-header-text p {
-    margin: 0.25rem 0 0;
-    font-size: 0.88rem;
-    color: #7b93c4;
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+    color: var(--header-sub);
 }
 
-/* Section cards */
+/* ── Section cards ── */
 .section-card {
-    background: #ffffff;
-    border: 1px solid #dde1e9;
-    border-radius: 10px;
-    padding: 1.5rem 1.7rem 1.8rem;
-    margin-bottom: 1.2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.6rem 1.9rem 2rem;
+    margin-bottom: 1.4rem;
 }
+
+/* ── Step label — bigger, bolder, dark-blue ── */
 .section-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #8a94a6;
-    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--step-label);
+    margin-bottom: 1.1rem;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.6rem;
 }
 
-/* Step badges */
+/* ── Step badge ── */
 .step-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 22px; height: 22px;
-    background: #0f1f3d;
-    color: #fff;
+    width: 30px; height: 30px;
+    background: var(--step-bg);
+    color: var(--step-text);
     border-radius: 50%;
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 700;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(26,79,214,0.3);
 }
 
-/* Instruction box */
+/* ── How-to instruction box ── */
 .how-to {
-    background: #f5f7fb;
-    border: 1px solid #dde1e9;
-    border-radius: 8px;
-    padding: 1rem 1.2rem;
-    font-size: 0.86rem;
-    color: #374151;
-    line-height: 1.65;
+    background: var(--how-bg);
+    border: 1px solid var(--how-border);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    font-size: 0.88rem;
+    color: var(--how-text);
+    line-height: 1.7;
     margin-bottom: 0.2rem;
 }
-.how-to strong { color: #0f1f3d; }
+.how-to strong { color: var(--accent); }
 .shorthand-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.84rem;
-    margin-top: 0.5rem;
+    margin-top: 0.6rem;
 }
 .shorthand-table th {
-    background: #eef0f5;
-    color: #4b5563;
-    font-weight: 600;
-    padding: 0.45rem 0.8rem;
+    background: var(--table-th-bg);
+    color: var(--table-th-text);
+    font-weight: 700;
+    padding: 0.5rem 0.9rem;
     text-align: left;
+    border-bottom: 2px solid var(--table-border);
 }
 .shorthand-table td {
-    padding: 0.45rem 0.8rem;
-    border-bottom: 1px solid #f0f1f4;
-    color: #374151;
+    padding: 0.45rem 0.9rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--how-text);
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.82rem;
 }
 .shorthand-table tr:last-child td { border-bottom: none; }
 
-/* Metrics */
+/* ── Metric cards ── */
 .metrics-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.4rem;
 }
 .metric-card {
-    background: #ffffff;
-    border: 1px solid #dde1e9;
-    border-radius: 10px;
-    padding: 1.1rem 1.4rem 1.2rem;
+    background: var(--metric-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem 1.3rem;
     text-align: center;
+    border-top: 3px solid var(--accent);
 }
 .metric-num {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #0f1f3d;
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--metric-num);
     font-family: 'IBM Plex Mono', monospace;
     line-height: 1.1;
 }
-.metric-num.accent { color: #1d5bdb; }
+.metric-num.accent { color: var(--metric-accent); }
 .metric-lbl {
-    font-size: 0.78rem;
-    color: #6b7280;
-    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--metric-lbl);
+    margin-top: 0.35rem;
     font-weight: 500;
-}
-
-/* Results table */
-.res-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88rem;
-}
-.res-table thead th {
-    background: #f5f7fb;
-    color: #374151;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 0.65rem 1rem;
-    text-align: left;
-    border-bottom: 2px solid #dde1e9;
+    letter-spacing: 0.05em;
 }
-.res-table tbody td {
-    padding: 0.7rem 1rem;
-    border-bottom: 1px solid #f0f2f5;
-    color: #1f2937;
-    vertical-align: top;
-}
-.res-table tbody tr:last-child td { border-bottom: none; }
-.res-table tbody tr:hover td { background: #f9fafc; }
-.mono { font-family: 'IBM Plex Mono', monospace; }
-.miles-cell { font-weight: 600; color: #1d5bdb; }
-.badge {
-    display: inline-block;
-    padding: 0.18rem 0.55rem;
-    border-radius: 4px;
-    font-size: 0.76rem;
-    font-weight: 600;
-}
-.badge-ok  { background: #dcfce7; color: #166534; }
-.badge-err { background: #fee2e2; color: #991b1b; }
-.addr-note { font-size: 0.75rem; color: #9ca3af; margin-top: 0.15rem; }
 
-/* Buttons */
+/* ── Buttons ── */
 .stButton > button {
-    background: #1d5bdb !important;
+    background: var(--accent) !important;
     color: #fff !important;
     border: none !important;
-    border-radius: 7px !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    padding: 0.6rem 1.8rem !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 0.97rem !important;
+    padding: 0.65rem 2rem !important;
+    letter-spacing: 0.01em !important;
+    box-shadow: 0 2px 10px rgba(26,79,214,0.25) !important;
+    transition: background 0.15s !important;
 }
-.stButton > button:hover { background: #1749b8 !important; }
+.stButton > button:hover { background: var(--accent-hover) !important; }
 .stDownloadButton > button {
-    border-radius: 7px !important;
-    font-weight: 500 !important;
-    font-size: 0.88rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
 }
 
-/* Textareas */
+/* ── Textareas ── */
 .stTextArea label {
-    font-weight: 500 !important;
-    color: #1f2937 !important;
-    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    font-size: 0.92rem !important;
 }
 .stTextArea textarea {
     font-family: 'IBM Plex Mono', monospace !important;
     font-size: 0.85rem !important;
-    border-radius: 7px !important;
-    border-color: #dde1e9 !important;
+    border-radius: 8px !important;
+    background: var(--bg-input) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
 }
 
-/* Alerts */
+/* ── Alerts ── */
 .alert-warn {
-    background: #fffbeb;
-    border-left: 4px solid #f59e0b;
-    border-radius: 0 7px 7px 0;
-    padding: 0.8rem 1.1rem;
-    font-size: 0.88rem;
-    color: #92400e;
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.9rem;
+    color: var(--warn-text);
     margin-bottom: 1rem;
+    font-weight: 500;
 }
 .alert-info {
-    background: #eff6ff;
-    border-left: 4px solid #1d5bdb;
-    border-radius: 0 7px 7px 0;
-    padding: 0.8rem 1.1rem;
-    font-size: 0.88rem;
-    color: #1e40af;
+    background: var(--info-bg);
+    border-left: 4px solid var(--info-border);
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.9rem;
+    color: var(--info-text);
     margin-bottom: 1rem;
+    font-weight: 500;
 }
 
-/* Sidebar */
+/* ── Sidebar ── */
 section[data-testid="stSidebar"] {
-    background: #ffffff;
-    border-right: 1px solid #dde1e9;
+    background: var(--sidebar-bg) !important;
+    border-right: 1px solid var(--sidebar-border) !important;
+}
+section[data-testid="stSidebar"] * {
+    color: var(--text-primary) !important;
+}
+
+/* ── General text readability ── */
+p, li, span, label, div {
+    color: var(--text-primary);
+}
+small { color: var(--text-secondary) !important; }
+.stCaption, [data-testid="stCaptionContainer"] {
+    color: var(--text-muted) !important;
 }
 </style>
 """, unsafe_allow_html=True)
