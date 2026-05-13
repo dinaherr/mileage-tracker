@@ -233,14 +233,22 @@ html, body, [class*="css"] {
 }
 [data-testid="stExpander"] summary,
 [data-testid="stExpander"] summary p,
-[data-testid="stExpander"] summary span {
+[data-testid="stExpander"] summary span,
+[data-testid="stExpander"] summary svg {
     color: #111827 !important;
     font-weight: 600 !important;
     font-size: 0.95rem !important;
 }
-[data-testid="stExpander"] > div {
-    background: #ffffff !important;
+/* Inner content area — transparent so .how-to blue box shows through */
+[data-testid="stExpander"] > div,
+[data-testid="stExpander"] details > div,
+[data-testid="stExpander"] .streamlit-expanderContent {
+    background: transparent !important;
     color: #111827 !important;
+}
+/* Placeholder text in textareas — lighter gray, readable but not dominant */
+.stTextArea textarea::placeholder {
+    color: rgba(107, 114, 128, 0.6) !important;
 }
 
 /* ── Sidebar — white bg, gray border, dark text ── */
@@ -350,8 +358,10 @@ section[data-testid="stSidebar"] textarea {
     [data-testid="stExpander"] summary span {
         color: #c8d8f8 !important;
     }
-    [data-testid="stExpander"] > div {
-        background: #161c2d !important;
+    [data-testid="stExpander"] > div,
+    [data-testid="stExpander"] details > div,
+    [data-testid="stExpander"] .streamlit-expanderContent {
+        background: transparent !important;
         color: #c8d8f8 !important;
     }
 
@@ -407,7 +417,9 @@ section[data-testid="stSidebar"] textarea {
 [data-theme="dark"] [data-testid="stExpander"] summary,
 [data-theme="dark"] [data-testid="stExpander"] summary p,
 [data-theme="dark"] [data-testid="stExpander"] summary span { color: #c8d8f8 !important; }
-[data-theme="dark"] [data-testid="stExpander"] > div { background: #161c2d !important; color: #c8d8f8 !important; }
+[data-theme="dark"] [data-testid="stExpander"] > div,
+[data-theme="dark"] [data-testid="stExpander"] details > div,
+[data-theme="dark"] [data-testid="stExpander"] .streamlit-expanderContent { background: transparent !important; color: #c8d8f8 !important; }
 [data-theme="dark"] section[data-testid="stSidebar"] { background: #111827 !important; border-right-color: #1f2d4a !important; }
 [data-theme="dark"] section[data-testid="stSidebar"] p,
 [data-theme="dark"] section[data-testid="stSidebar"] span,
@@ -591,11 +603,14 @@ if from_lines or to_lines:
     preview_df = _pd_prev.DataFrame(preview_rows)
 
     def _stripe_preview(row):
-        base = "background-color: #f9fafc" if row.name % 2 == 0 else "background-color: #ffffff"
+        # Use semi-transparent stripes that work on any background/theme
+        base = "background-color: rgba(99,130,255,0.08)" if row.name % 2 == 0 else "background-color: transparent"
         return [base] * len(row)
 
-    styled_preview = preview_df.style.apply(_stripe_preview, axis=1).set_properties(
-        subset=["Row"], **{"text-align": "center", "color": "#9ca3af", "width": "40px"}
+    styled_preview = (
+        preview_df.style
+        .apply(_stripe_preview, axis=1)
+        .set_properties(subset=["Row"], **{"text-align": "center", "width": "40px"})
     )
     with st.expander("🔍  Preview — verify your rows match before calculating", expanded=(max_preview > 0)):
         st.dataframe(styled_preview, use_container_width=True, hide_index=True, height=min(36 * max_preview + 40, 320))
