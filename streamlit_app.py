@@ -361,7 +361,7 @@ col_from, col_to = st.columns(2, gap="medium")
 with col_from:
     st.markdown(
         "**FROM — Starting addresses**\n\n"
-        "<small style='color:#6b7280'>Copy your starting-address column from Excel and paste here — one address per row</small>",
+        "<small style=\'color:#6b7280\'>Copy your starting-address column from Excel and paste here — one address per row</small>",
         unsafe_allow_html=True,
     )
     from_raw = st.text_area(
@@ -374,7 +374,7 @@ with col_from:
 with col_to:
     st.markdown(
         "**TO — Destination addresses**\n\n"
-        "<small style='color:#6b7280'>Copy your destination column from Excel and paste here — one address per row</small>",
+        "<small style=\'color:#6b7280\'>Copy your destination column from Excel and paste here — one address per row</small>",
         unsafe_allow_html=True,
     )
     to_raw = st.text_area(
@@ -386,7 +386,7 @@ with col_to:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# Live row-count feedback
+# Live row-count feedback + numbered preview table
 from_lines = [l for l in from_raw.strip().split("\n") if l.strip()]
 to_lines   = [l for l in to_raw.strip().split("\n") if l.strip()]
 
@@ -404,6 +404,28 @@ if from_lines or to_lines:
             f'counts must match before calculating.</div>',
             unsafe_allow_html=True,
         )
+
+    # Numbered side-by-side preview — helps her verify rows match Excel
+    max_preview = max(len(from_lines), len(to_lines))
+    preview_rows = []
+    for i in range(max_preview):
+        preview_rows.append({
+            "Row": i + 1,
+            "FROM Address": from_lines[i] if i < len(from_lines) else "—",
+            "TO Address":   to_lines[i]   if i < len(to_lines)   else "—",
+        })
+    import pandas as _pd_prev
+    preview_df = _pd_prev.DataFrame(preview_rows)
+
+    def _stripe_preview(row):
+        base = "background-color: #f9fafc" if row.name % 2 == 0 else "background-color: #ffffff"
+        return [base] * len(row)
+
+    styled_preview = preview_df.style.apply(_stripe_preview, axis=1).set_properties(
+        subset=["Row"], **{"text-align": "center", "color": "#9ca3af", "width": "40px"}
+    )
+    with st.expander("🔍  Preview — verify your rows match before calculating", expanded=(max_preview > 0)):
+        st.dataframe(styled_preview, use_container_width=True, hide_index=True, height=min(36 * max_preview + 40, 320))
 
 # ─────────────────────────────────────────────
 #  Calculate button
@@ -427,19 +449,40 @@ def format_address(raw: str, kw_list: list, default_cs: str, pe_addr: str) -> st
         return line
     return f"{line}, {default_cs}"
 
-def get_mileage(from_addr: str, to_addr: str, api_key: str):
+def get_all_routes(from_addr: str, to_addr: str, api_key: str):
+    """
+    Fetch up to 3 alternate routes from MapQuest and return a list of
+    distances (miles), sorted shortest first.  Returns [] on failure.
+    """
     try:
         resp = requests.get(
-            "http://www.mapquestapi.com/directions/v2/route",
-            params={"key": api_key, "from": from_addr, "to": to_addr, "unit": "m"},
-            timeout=12,
+            "http://www.mapquestapi.com/directions/v2/alternateroutes",
+            params={
+                "key":         api_key,
+                "from":        from_addr,
+                "to":          to_addr,
+                "unit":        "m",
+                "maxRoutes":   3,
+            },
+            timeout=15,
         )
         data = resp.json()
-        if resp.status_code == 200 and data["info"]["statuscode"] == 0:
-            return round(data["route"]["distance"], 2)
+        if resp.status_code != 200 or data["info"]["statuscode"] != 0:
+            return []
+
+        distances = []
+        # Primary route
+        if "route" in data and "distance" in data["route"]:
+            distances.append(round(data["route"]["distance"], 2))
+        # Alternate routes
+        for alt in data.get("alternateRoutes", []):
+            route = alt.get("route", {})
+            if "distance" in route:
+                distances.append(round(route["distance"], 2))
+
+        return sorted(distances, reverse=True)   # longest first
     except Exception:
-        pass
-    return None
+        return []
 
 def to_excel_bytes(df: pd.DataFrame) -> bytes:
     buf = io.BytesIO()
@@ -488,21 +531,35 @@ if go:
     bar  = st.progress(0, text="Looking up route 1…")
     for i, (fa, ta) in enumerate(zip(from_addrs, to_addrs)):
         bar.progress((i + 1) / len(from_addrs), text=f"Looking up route {i + 1} of {len(from_addrs)}…")
-        miles = get_mileage(fa, ta, API_KEY)
+        all_distances = get_all_routes(fa, ta, API_KEY)
+        # Pick mileage to export:
+        # Use the longest route, UNLESS it is >5 mi more than the middle route
+        # (outlier check) — in that case use the middle route instead.
+        if all_distances:
+            longest = all_distances[0]  # list is sorted longest-first
+            if len(all_distances) >= 3:
+                middle = all_distances[1]
+                chosen = middle if (longest - middle) > 5 else longest
+            else:
+                chosen = longest
+        else:
+            chosen = None
+
         rows.append({
-            "stop":     i + 1,
-            "from_raw": from_lines[i].strip(),
-            "from":     fa,
-            "to_raw":   to_lines[i].strip(),
-            "to":       ta,
-            "miles":    miles,
-            "ok":       miles is not None,
+            "stop":      i + 1,
+            "from_raw":  from_lines[i].strip(),
+            "from":      fa,
+            "to_raw":    to_lines[i].strip(),
+            "to":        ta,
+            "routes":    all_distances,   # sorted longest first
+            "best":      chosen,
+            "ok":        len(all_distances) > 0,
         })
     bar.empty()
 
-    numeric  = [r["miles"] for r in rows if r["ok"]]
-    total_mi = round(sum(numeric), 2) if numeric else 0
-    avg_mi   = round(total_mi / len(numeric), 2) if numeric else 0
+    numeric  = [r["best"] for r in rows if r["ok"]]
+    total_mi = round(sum(numeric), 1) if numeric else 0
+    avg_mi   = round(total_mi / len(numeric), 1) if numeric else 0
     errors   = sum(1 for r in rows if not r["ok"])
 
     # Metrics
@@ -530,28 +587,60 @@ if go:
             unsafe_allow_html=True,
         )
 
-    # Results table — use st.dataframe for clean native rendering
+    # Results table — one row per stop, one column per route option
     st.markdown("""
     <div class="section-card">
       <div class="section-label"><span class="step-badge">3</span>&nbsp; Results</div>
     """, unsafe_allow_html=True)
 
-    display_rows = [{
-        "#":             r["stop"],
-        "From":          r["from"],
-        "To":            r["to"],
-        "Miles (A → B)": r["miles"] if r["ok"] else "Error",
-        "Status":        "✓ OK" if r["ok"] else "✗ Error",
-    } for r in rows]
+    # Build display dataframe — pad route columns so all rows have same width
+    # Routes are sorted longest-first; round all to 1 decimal for display
+    max_routes = max((len(r["routes"]) for r in rows), default=1)
+    route_col_names = [f"Route {i+1} (mi)" for i in range(max_routes)]
+
+    display_rows = []
+    for r in rows:
+        row = {
+            "#":     r["stop"],
+            "From":  r["from"],
+            "To":    r["to"],
+        }
+        for i, col in enumerate(route_col_names):
+            val = r["routes"][i] if i < len(r["routes"]) else None
+            row[col] = round(val, 1) if val is not None else None
+        row["Used"] = round(r["best"], 1) if r["best"] is not None else "Error"
+        row["Status"] = "✓ OK" if r["ok"] else "✗ Error"
+        display_rows.append(row)
+
     display_df = pd.DataFrame(display_rows)
 
-    st.dataframe(display_df, use_container_width=True, hide_index=True)
+    # Highlight the chosen (best) value in red — that is the exported mileage
+    def highlight_chosen(row_s):
+        styles = [""] * len(row_s)
+        best_val = row_s.get("Used")
+        if best_val == "Error":
+            return styles
+        for col in route_col_names:
+            if col in row_s.index and row_s[col] == best_val:
+                idx = list(row_s.index).index(col)
+                styles[idx] = "background-color: #fee2e2; color: #991b1b; font-weight: 700"
+        # Also highlight the Used column itself
+        if "Used" in row_s.index:
+            styles[list(row_s.index).index("Used")] = "background-color: #fee2e2; color: #991b1b; font-weight: 700"
+        return styles
 
-    st.caption(f"Total: {total_mi} mi across {len(numeric)} route(s)   ·   Addresses shown for verification only — not included in any download.")
+    styled = display_df.style.apply(highlight_chosen, axis=1)
+    st.dataframe(styled, use_container_width=True, hide_index=True)
+
+    st.caption(
+        f"🔴 Highlighted = mileage used in export (longest route, or middle if longest is 5+ mi above middle)   ·   "
+        f"Total: {total_mi} mi   ·   "
+        f"Addresses shown for verification only — not included in any download."
+    )
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Downloads
+    # Downloads — export chosen mileage only (rounded to 1 decimal), no addresses
     st.markdown("""
     <div class="section-card">
       <div class="section-label"><span class="step-badge">4</span>&nbsp; Download Results</div>
@@ -559,7 +648,7 @@ if go:
 
     export_rows = [{
         "Stop #": r["stop"],
-        "Miles":  r["miles"] if r["ok"] else "Error",
+        "Miles": round(r["best"], 1) if r["ok"] else "Error",
     } for r in rows]
     export_rows.append({"Stop #": "TOTAL", "Miles": total_mi})
     export_df = pd.DataFrame(export_rows)
