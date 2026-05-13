@@ -440,7 +440,7 @@ section[data-testid="stSidebar"] textarea {
 # ─────────────────────────────────────────────
 DEFAULT_CITY_STATE = "Kansas City, KS"
 PE_ADDRESS         = "444 Minnesota Ave, Kansas City, KS 66101"
-LOCAL_KEYWORDS     = ["Kansas City", "KS", "MO"]
+LOCAL_KEYWORDS     = ["Kansas City, KS", "KS"]
 
 # ─────────────────────────────────────────────
 #  Sidebar — configuration
@@ -463,8 +463,8 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("**Local area keywords**")
     st.caption(
-        "Addresses containing any of these words are used exactly as typed "
-        "(no default city added)."
+        "Addresses containing these keywords are used as-is (no default city added). "
+        "Note: any address with ', MO' is automatically corrected to ', KS'."
     )
     local_kw_str = st.text_area(
         "Keywords (one per line)",
@@ -630,12 +630,27 @@ go = st.button("📍  Calculate Mileage", use_container_width=False)
 #  Helpers
 # ─────────────────────────────────────────────
 def format_address(raw: str, kw_list: list, default_cs: str, pe_addr: str) -> str:
+    """Resolve raw input to a full address, always defaulting to KS."""
     line = raw.strip()
     if line.upper() == "PE":
         return pe_addr
+    # Bare 'Kansas City' with no state — assume KS
+    if line.strip().lower() == "kansas city":
+        return "Kansas City, KS"
+    # If MO is present, swap to KS so KS is always tried first.
+    # The route loop will retry with MO if MapQuest finds nothing.
+    if ", MO" in line or " MO " in line:
+        return line.replace(", MO ", ", KS ").replace(", MO", ", KS")
+    # Already has KS marker — use as-is
     if any(kw in line for kw in kw_list):
         return line
+    # Bare street, no state — append default (KS)
     return f"{line}, {default_cs}"
+
+
+def mo_fallback(addr: str) -> str:
+    """Swap KS → MO for Missouri fallback attempt."""
+    return addr.replace(", KS ", ", MO ").replace(", KS", ", MO")
 
 def get_all_routes(from_addr: str, to_addr: str, api_key: str):
     """
@@ -719,7 +734,20 @@ if go:
     bar  = st.progress(0, text="Looking up route 1…")
     for i, (fa, ta) in enumerate(zip(from_addrs, to_addrs)):
         bar.progress((i + 1) / len(from_addrs), text=f"Looking up route {i + 1} of {len(from_addrs)}…")
+
+        # Try Kansas first (always the default state)
         all_distances = get_all_routes(fa, ta, API_KEY)
+        used_from, used_to = fa, ta
+
+        # If KS yields nothing, retry with Missouri for both addresses
+        # (only KS and MO are ever attempted — no other states)
+        if not all_distances:
+            fa_mo = mo_fallback(fa)
+            ta_mo = mo_fallback(ta)
+            all_distances = get_all_routes(fa_mo, ta_mo, API_KEY)
+            if all_distances:
+                used_from, used_to = fa_mo, ta_mo
+
         # Pick mileage to export:
         # Use the longest route, UNLESS it is >5 mi more than the middle route
         # (outlier check) — in that case use the middle route instead.
@@ -736,9 +764,9 @@ if go:
         rows.append({
             "stop":      i + 1,
             "from_raw":  from_lines[i].strip(),
-            "from":      fa,
+            "from":      used_from,   # reflects whichever state actually matched
             "to_raw":    to_lines[i].strip(),
-            "to":        ta,
+            "to":        used_to,
             "routes":    all_distances,   # sorted longest first
             "best":      chosen,
             "ok":        len(all_distances) > 0,
