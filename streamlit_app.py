@@ -25,11 +25,10 @@ html, body, [class*="css"] {
 }
 
 /* ════════════════════════════════════════════
-   LIGHT MODE  — white bg, black/navy text
+   LIGHT MODE — clean white, dark text, blue accents
    ════════════════════════════════════════════ */
 
-/* Page background — light gray so white cards pop */
-.stApp { background: #f2f4f8 !important; }
+.stApp { background: #ffffff !important; }
 
 .block-container {
     padding-top: 1.8rem;
@@ -37,7 +36,7 @@ html, body, [class*="css"] {
     max-width: 1060px;
 }
 
-/* ── Header ── */
+/* ── Header — stays dark navy, white text ── */
 .app-header {
     display: flex;
     align-items: center;
@@ -60,29 +59,30 @@ html, body, [class*="css"] {
     color: #93b4df !important;
 }
 
-/* ── Section cards ── */
+/* ── Section cards — white with gray outline ── */
 .section-card {
     background: #ffffff;
-    border: 1.5px solid #c8d0e0;
+    border: 1.5px solid #d1d9e6;
     border-radius: 12px;
     padding: 1.6rem 1.9rem 2rem;
     margin-bottom: 1.4rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-/* ── Step label ── */
+/* ── Step label — bold dark text ── */
 .section-label {
     font-size: 1.05rem;
     font-weight: 700;
     letter-spacing: 0;
     text-transform: none;
-    color: #0d1b38 !important;
+    color: #111827 !important;
     margin-bottom: 1.1rem;
     display: flex;
     align-items: center;
     gap: 0.6rem;
 }
 
-/* ── Step badge ── */
+/* ── Step badge — blue circle, white number ── */
 .step-badge {
     display: inline-flex;
     align-items: center;
@@ -94,48 +94,49 @@ html, body, [class*="css"] {
     font-size: 0.9rem;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(26,79,214,0.35);
+    box-shadow: 0 2px 8px rgba(26,79,214,0.3);
 }
 
-/* ── How-to instruction box ── */
+/* ── How-to box — solid blue bg, white text ── */
 .how-to {
-    background: #f0f4ff;
-    border: 1.5px solid #b8c8f0;
+    background: #1a4fd6;
+    border: none;
     border-radius: 10px;
-    padding: 1.1rem 1.4rem;
+    padding: 1.2rem 1.5rem;
     font-size: 0.88rem;
-    color: #0d1b38 !important;
-    line-height: 1.7;
+    color: #ffffff !important;
+    line-height: 1.75;
     margin-bottom: 0.2rem;
 }
-.how-to strong { color: #1a4fd6 !important; }
+.how-to strong { color: #bdd4ff !important; }
 
-/* ── Shorthand table inside how-to ── */
+/* ── Shorthand table inside how-to — white bg, dark text ── */
 .shorthand-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.84rem;
-    margin-top: 0.6rem;
+    margin-top: 0.8rem;
+    border-radius: 7px;
+    overflow: hidden;
 }
 .shorthand-table th {
-    background: #dce6ff;
-    color: #0d1b38 !important;
+    background: #0d1b38;
+    color: #ffffff !important;
     font-weight: 700;
-    padding: 0.5rem 0.9rem;
+    padding: 0.55rem 0.9rem;
     text-align: left;
-    border-bottom: 2px solid #b8c8f0;
 }
 .shorthand-table td {
-    padding: 0.45rem 0.9rem;
-    border-bottom: 1px solid #dde3f0;
-    color: #1e2d50 !important;
+    padding: 0.5rem 0.9rem;
+    border-bottom: 1px solid #e5e9f2;
+    color: #1e293b !important;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.82rem;
     background: #ffffff;
 }
 .shorthand-table tr:last-child td { border-bottom: none; }
 
-/* ── Metric cards ── */
+/* ── Metric cards — white, gray border, blue top accent ── */
 .metrics-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -144,23 +145,24 @@ html, body, [class*="css"] {
 }
 .metric-card {
     background: #ffffff;
-    border: 1.5px solid #c8d0e0;
+    border: 1.5px solid #d1d9e6;
     border-top: 3px solid #1a4fd6;
     border-radius: 12px;
     padding: 1.2rem 1.4rem 1.3rem;
     text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 .metric-num {
     font-size: 2.1rem;
     font-weight: 700;
-    color: #0d1b38 !important;
+    color: #111827 !important;
     font-family: 'IBM Plex Mono', monospace;
     line-height: 1.1;
 }
 .metric-num.accent { color: #1a4fd6 !important; }
 .metric-lbl {
     font-size: 0.8rem;
-    color: #4a5878 !important;
+    color: #6b7280 !important;
     margin-top: 0.35rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -176,7 +178,7 @@ html, body, [class*="css"] {
     font-weight: 700 !important;
     font-size: 0.97rem !important;
     padding: 0.65rem 2rem !important;
-    box-shadow: 0 2px 10px rgba(26,79,214,0.3) !important;
+    box-shadow: 0 2px 10px rgba(26,79,214,0.25) !important;
 }
 .stButton > button:hover { background: #1340b0 !important; }
 .stDownloadButton > button {
@@ -188,21 +190,21 @@ html, body, [class*="css"] {
 /* ── Textareas ── */
 .stTextArea label {
     font-weight: 600 !important;
-    color: #0d1b38 !important;
+    color: #111827 !important;
     font-size: 0.92rem !important;
 }
 .stTextArea textarea {
     font-family: 'IBM Plex Mono', monospace !important;
     font-size: 0.85rem !important;
     border-radius: 8px !important;
-    background: #ffffff !important;
-    color: #0d1b38 !important;
-    border: 1.5px solid #b8c2d8 !important;
+    background: #f9fafb !important;
+    color: #111827 !important;
+    border: 1.5px solid #d1d9e6 !important;
 }
 
 /* ── Alert boxes ── */
 .alert-warn {
-    background: #fff8e6;
+    background: #fffbeb;
     border-left: 4px solid #f59e0b;
     border-radius: 0 8px 8px 0;
     padding: 0.85rem 1.2rem;
@@ -212,38 +214,39 @@ html, body, [class*="css"] {
     font-weight: 500;
 }
 .alert-info {
-    background: #e6eeff;
+    background: #eff6ff;
     border-left: 4px solid #1a4fd6;
     border-radius: 0 8px 8px 0;
     padding: 0.85rem 1.2rem;
     font-size: 0.9rem;
-    color: #0d2d8a !important;
+    color: #1e3a8a !important;
     margin-bottom: 1rem;
     font-weight: 500;
 }
 
-/* ── Streamlit native expander — force visible text in light mode ── */
+/* ── Expander — white bg, dark text, gray outline ── */
 [data-testid="stExpander"] {
     background: #ffffff !important;
-    border: 1.5px solid #c8d0e0 !important;
+    border: 1.5px solid #d1d9e6 !important;
     border-radius: 10px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
 }
 [data-testid="stExpander"] summary,
 [data-testid="stExpander"] summary p,
 [data-testid="stExpander"] summary span {
-    color: #0d1b38 !important;
+    color: #111827 !important;
     font-weight: 600 !important;
     font-size: 0.95rem !important;
 }
 [data-testid="stExpander"] > div {
     background: #ffffff !important;
-    color: #0d1b38 !important;
+    color: #111827 !important;
 }
 
-/* ── Streamlit sidebar — light mode ── */
+/* ── Sidebar — white bg, gray border, dark text ── */
 section[data-testid="stSidebar"] {
-    background: #ffffff !important;
-    border-right: 1.5px solid #c8d0e0 !important;
+    background: #f9fafb !important;
+    border-right: 1.5px solid #d1d9e6 !important;
 }
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] span,
@@ -251,27 +254,28 @@ section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] div,
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] .stCaption {
-    color: #0d1b38 !important;
+section[data-testid="stSidebar"] h3 {
+    color: #111827 !important;
+}
+section[data-testid="stSidebar"] .stCaption,
+section[data-testid="stSidebar"] .stMarkdown p {
+    color: #6b7280 !important;
 }
 section[data-testid="stSidebar"] input,
 section[data-testid="stSidebar"] textarea {
-    background: #f2f4f8 !important;
-    color: #0d1b38 !important;
-    border: 1.5px solid #b8c2d8 !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: 1.5px solid #d1d9e6 !important;
     border-radius: 7px !important;
 }
-section[data-testid="stSidebar"] .stMarkdown p {
-    color: #4a5878 !important;
-}
 
-/* ── General light-mode text ── */
-.stMarkdown p, .stMarkdown li, .stMarkdown span {
-    color: #1e2d50 !important;
+/* ── General text — dark on white ── */
+.stMarkdown p, .stMarkdown li {
+    color: #1e293b !important;
 }
+.stMarkdown span { color: #1e293b; }
 .stCaption, [data-testid="stCaptionContainer"] p {
-    color: #5a6a8a !important;
+    color: #6b7280 !important;
 }
 
 /* ════════════════════════════════════════════
