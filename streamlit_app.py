@@ -530,61 +530,24 @@ if go:
             unsafe_allow_html=True,
         )
 
-    # Results table
+    # Results table — use st.dataframe for clean native rendering
     st.markdown("""
     <div class="section-card">
       <div class="section-label"><span class="step-badge">3</span>&nbsp; Results</div>
     """, unsafe_allow_html=True)
 
-    rows_html = ""
-    for r in rows:
-        badge    = '<span class="badge badge-ok">✓ OK</span>' if r["ok"] else '<span class="badge badge-err">✗ Error</span>'
-        miles_td = f'<span class="miles-cell mono">{r["miles"]} mi</span>' if r["ok"] else '<span style="color:#9ca3af">—</span>'
+    display_rows = [{
+        "#":             r["stop"],
+        "From":          r["from"],
+        "To":            r["to"],
+        "Miles (A → B)": r["miles"] if r["ok"] else "Error",
+        "Status":        "✓ OK" if r["ok"] else "✗ Error",
+    } for r in rows]
+    display_df = pd.DataFrame(display_rows)
 
-        # Show the entered value; if it was expanded (PE or default city added), show resolved address beneath it
-        from_note = ""
-        if r["from_raw"].upper() == "PE" or r["from"] != r["from_raw"]:
-            from_note = f'<div class="addr-note">↳ {r["from"]}</div>'
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-        to_note = ""
-        if r["to_raw"].upper() == "PE" or r["to"] != r["to_raw"]:
-            to_note = f'<div class="addr-note">↳ {r["to"]}</div>'
-
-        rows_html += f"""
-        <tr>
-          <td class="mono" style="color:#9ca3af;width:36px;text-align:center">{r['stop']}</td>
-          <td>{r['from_raw']}{from_note}</td>
-          <td>{r['to_raw']}{to_note}</td>
-          <td>{miles_td}</td>
-          <td>{badge}</td>
-        </tr>
-        """
-
-    st.markdown(f"""
-    <table class="res-table">
-      <thead>
-        <tr>
-          <th style="text-align:center">#</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Miles (A → B)</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows_html}
-        <tr style="background:#f5f7fb;">
-          <td></td>
-          <td colspan="2" style="font-weight:600;color:#374151;padding:0.7rem 1rem;">TOTAL</td>
-          <td class="miles-cell mono" style="padding:0.7rem 1rem;">{total_mi} mi</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-    <p style="font-size:0.78rem;color:#9ca3af;margin-top:0.6rem;">
-      ℹ️ Addresses shown above are for verification only — they are not included in any download.
-    </p>
-    """, unsafe_allow_html=True)
+    st.caption(f"Total: {total_mi} mi across {len(numeric)} route(s)   ·   Addresses shown for verification only — not included in any download.")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
