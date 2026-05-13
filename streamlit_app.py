@@ -290,7 +290,7 @@ with st.sidebar:
     local_keywords = [k.strip() for k in local_kw_str.split("\n") if k.strip()]
 
     st.markdown("---")
-    st.caption("🔑 API key loaded from `st.secrets['Mapquest_API_KEY']`")
+    st.caption("🔑 API key loaded from `st.secrets['MAPQUEST_API_KEY']`")
 
 # ─────────────────────────────────────────────
 #  Header
@@ -456,11 +456,11 @@ def to_excel_bytes(df: pd.DataFrame) -> bytes:
 # ─────────────────────────────────────────────
 if go:
     try:
-        API_KEY = st.secrets["Mapquest_API_KEY"]
+        API_KEY = st.secrets["MAPQUEST_API_KEY"]
     except Exception:
         st.markdown(
             '<div class="alert-warn">⚠️ <strong>API key not found.</strong> '
-            'Add <code>Mapquest_API_KEY</code> to your <code>.streamlit/secrets.toml</code>.</div>',
+            'Add <code>MAPQUEST_API_KEY</code> to your <code>.streamlit/secrets.toml</code>.</div>',
             unsafe_allow_html=True,
         )
         st.stop()
