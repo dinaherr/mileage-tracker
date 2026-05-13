@@ -252,10 +252,7 @@ section[data-testid="stSidebar"] {
 # ─────────────────────────────────────────────
 DEFAULT_CITY_STATE = "Kansas City, KS"
 PE_ADDRESS         = "444 Minnesota Ave, Kansas City, KS 66101"
-LOCAL_KEYWORDS     = [
-    "Kansas City", "KS", "MO", "Overland Park", "Olathe",
-    "Lenexa", "Shawnee", "Leawood", "Prairie Village",
-]
+LOCAL_KEYWORDS     = ["Kansas City", "KS", "MO"]
 
 # ─────────────────────────────────────────────
 #  Sidebar — configuration
@@ -614,22 +611,36 @@ if go:
 
     display_df = pd.DataFrame(display_rows)
 
-    # Highlight the chosen (best) value in red — that is the exported mileage
+    # Bold red text on whichever route column matches the chosen mileage.
+    # "Used" column stays plain black. No background fill anywhere.
     def highlight_chosen(row_s):
         styles = [""] * len(row_s)
         best_val = row_s.get("Used")
-        if best_val == "Error":
+        if best_val == "Error" or best_val is None:
             return styles
         for col in route_col_names:
             if col in row_s.index and row_s[col] == best_val:
                 idx = list(row_s.index).index(col)
-                styles[idx] = "background-color: #fee2e2; color: #991b1b; font-weight: 700"
-        # Also highlight the Used column itself
-        if "Used" in row_s.index:
-            styles[list(row_s.index).index("Used")] = "background-color: #fee2e2; color: #991b1b; font-weight: 700"
+                styles[idx] = "color: #991b1b; font-weight: 700"
         return styles
 
-    styled = display_df.style.apply(highlight_chosen, axis=1)
+    # Format all numeric columns to exactly 1 decimal place (5.9 not 5.90000)
+    def _fmt_mi(v):
+        if v is None or (isinstance(v, float) and v != v):
+            return "—"
+        try:
+            return f"{float(v):.1f}"
+        except Exception:
+            return str(v)
+
+    format_dict = {col: _fmt_mi for col in route_col_names}
+    format_dict["Used"] = _fmt_mi
+
+    styled = (
+        display_df.style
+        .apply(highlight_chosen, axis=1)
+        .format(format_dict, na_rep="—")
+    )
     st.dataframe(styled, use_container_width=True, hide_index=True)
 
     st.caption(
